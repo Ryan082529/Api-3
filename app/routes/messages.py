@@ -1,52 +1,45 @@
-from flask import Blueprint, request, jsonify, abort
-from ..models.message import Message
+from flask import Blueprint, request
 from .. import db
+from ..schemas.message_schema import MessageSchema
+from ..controllers import message_controller
+from ..middlewares.message_required import mensagem_existe
 
 messages_bp = Blueprint('messages', __name__)
+message_schema = MessageSchema()
+messages_schema = MessageSchema(many=True)
 
-# Rota para listar todas as mensagens
 @messages_bp.route('/', methods=['GET'])
 def get_messages():
-    messages = Message.query.all()
-    return jsonify([msg.to_dict() for msg in messages]), 200
+    messages = message_controller.listar_mensagens()
+    return messages_schema.jsonify(messages), 200
 
-# Rota para obter uma mensagem por id
 @messages_bp.route('/<int:message_id>', methods=['GET'])
+@mensagem_existe
 def get_message(message_id):
-    message = Message.query.get_or_404(message_id)
-    return jsonify(message.to_dict()), 200
+    return message_schema.jsonify(request.mensagem), 200
 
-# Rota para criar uma nova mensagem
 @messages_bp.route('/', methods=['POST'])
 def create_message():
-    data = request.get_json()
-    if not data or 'content' not in data:
-        abort(400, description="Campo 'content' é obrigatório.")
-    
-    new_message = Message(content=data['content'])
-    db.session.add(new_message)
-    db.session.commit()
-    
-    return jsonify(new_message.to_dict()), 201
+    data = message_schema.load(request.get_json())
+    message = message_controller.criar_mensagem(data)
+    return message_schema.jsonify(message), 201
 
-# Rota para atualizar uma mensagem existente
 @messages_bp.route('/<int:message_id>', methods=['PUT'])
+@mensagem_existe
 def update_message(message_id):
-    message = Message.query.get_or_404(message_id)
-    data = request.get_json()
-    if not data or 'content' not in data:
-        abort(400, description="Campo 'content' é obrigatório.")
-    
-    message.content = data['content']
-    db.session.commit()
-    
-    return jsonify(message.to_dict()), 200
+    data = message_schema.load(request.get_json())  # Atualização completa
+    updated = message_controller.atualizar_mensagem(request.mensagem, data)
+    return message_schema.jsonify(updated), 200
 
-# Rota para deletar uma mensagem
+@messages_bp.route('/<int:message_id>', methods=['PATCH'])
+@mensagem_existe
+def partial_update_message(message_id):
+    data = message_schema.load(request.get_json(), partial=True)  # Atualização parcial
+    updated = message_controller.atualizar_mensagem(request.mensagem, data)
+    return message_schema.jsonify(updated), 200
+
 @messages_bp.route('/<int:message_id>', methods=['DELETE'])
+@mensagem_existe
 def delete_message(message_id):
-    message = Message.query.get_or_404(message_id)
-    db.session.delete(message)
-    db.session.commit()
-    
+    message_controller.deletar_mensagem(request.mensagem)
     return '', 204

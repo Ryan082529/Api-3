@@ -26,6 +26,7 @@ def create_comment(message_id):
     data = request.get_json()
     data['message_id'] = message_id
     validated_data = comment_schema.load(data)
+    data["user_id"] = 1  # usuário fixo
     comment = comment_controller.criar_comentario(validated_data)
     return comment_schema.jsonify(comment), 201
 
@@ -54,4 +55,3 @@ def partial_update_comment(message_id, comment_id):
 def delete_comment(message_id, comment_id):
     comment_controller.deletar_comentario(request.comentario)
     return '', 204
-

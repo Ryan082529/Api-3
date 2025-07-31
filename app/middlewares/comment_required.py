@@ -11,4 +11,3 @@ def comentario_existe(f):
         request.comentario = comment
         return f(message_id, comment_id, *args, **kwargs)
     return decorated_function
-

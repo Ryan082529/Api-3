@@ -6,6 +6,7 @@ from marshmallow import ValidationError
 from werkzeug.exceptions import HTTPException
 from .config import Config
 
+
 db = SQLAlchemy()
 ma = Marshmallow()
 migrate = Migrate()
@@ -48,6 +49,9 @@ def create_app():
 
     from app.routes.comments import comments_bp
     app.register_blueprint(comments_bp)
+
+    from app.routes.users import users_bp
+    app.register_blueprint(users_bp)
 
 
     return app

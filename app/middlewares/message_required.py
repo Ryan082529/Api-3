@@ -11,3 +11,5 @@ def mensagem_existe(f):
         request.mensagem = message
         return f(message_id, *args, **kwargs)
     return decorated_function
+
+    

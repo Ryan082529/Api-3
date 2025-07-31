@@ -8,6 +8,7 @@ class Comment(db.Model):
 
     message_id = db.Column(db.Integer, db.ForeignKey('message.id'), nullable=False)
     message = db.relationship('Message', backref=db.backref('comments', lazy=True))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def to_dict(self):
         return {

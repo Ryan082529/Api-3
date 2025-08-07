@@ -3,6 +3,7 @@ from ..schemas.comment_schema import CommentSchema
 from ..controllers import comment_controller
 from ..middlewares.message_required import mensagem_existe
 from ..middlewares.comment_required import comentario_existe
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 comments_bp = Blueprint('comments', __name__)
 comment_schema = CommentSchema()

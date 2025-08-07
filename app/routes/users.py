@@ -1,6 +1,7 @@
 from flask import Blueprint, request, abort
 from ..schemas.user_schema import UserSchema
 from ..controllers import user_controller
+from werkzeug.security import generate_password_hash
 
 users_bp = Blueprint("users", __name__)
 user_schema = UserSchema()
@@ -22,6 +23,7 @@ def get_user(user_id):
 def create_user():
     data = request.get_json()
     validated = user_schema.load(data)
+    validated["senha"] = generate_password_hash(validated["senha"])
     novo = user_controller.criar_usuario(validated)
     return user_schema.jsonify(novo), 201
 

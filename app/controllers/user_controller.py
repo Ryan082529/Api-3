@@ -22,3 +22,4 @@ def atualizar_usuario(usuario, dados):
 def deletar_usuario(usuario):
     db.session.delete(usuario)
     db.session.commit()
+

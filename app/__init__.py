@@ -47,6 +47,16 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
+# Handler personalizado para requisição sem token
+    @jwt.unauthorized_loader
+    def custom_unauthorized_response(err_str):
+    # Verifica a rota acessada
+        if request.path == '/mensagens/<message_id>':
+            return jsonify({"erro": "Token não fornecido na rota específica"}), 401
+        else:
+            return jsonify({"erro": "Token não fornecido"}), 401
+
+
     @jwt.unauthorized_loader
     def unauthorized_response(callback):
         return jsonify({ "error": "Token JWT ausente ou inválido" }), 401

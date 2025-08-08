@@ -86,7 +86,8 @@ def main():
             "titulo": "Tentativa sem token",
             "conteudo": "Sem autorização"
         })
-        if put_sem_token and put_sem_token.status_code == 401:
+        print(put_sem_token is None)
+        if not put_sem_token and put_sem_token.status_code == 401:
             nota += 5
             print("   ✅ Atualização sem token corretamente negada (401).")
         else:

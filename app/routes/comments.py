@@ -11,6 +11,7 @@ comments_schema = CommentSchema(many=True)
 
 @comments_bp.route('/messages/<int:message_id>/comments', methods=['GET'])
 @mensagem_existe
+@jwt_required()
 def get_comments(message_id):
     comments = comment_controller.listar_comentarios(message_id)
     return comments_schema.jsonify(comments), 200
@@ -18,22 +19,28 @@ def get_comments(message_id):
 @comments_bp.route('/messages/<int:message_id>/comments/<int:comment_id>', methods=['GET'])
 @mensagem_existe
 @comentario_existe
+@jwt_required()
 def get_comment(message_id, comment_id):
     return comment_schema.jsonify(request.comentario), 200
 
 @comments_bp.route('/messages/<int:message_id>/comments', methods=['POST'])
 @mensagem_existe
+@jwt_required()
 def create_comment(message_id):
     data = request.get_json()
+    print(data)
     data['message_id'] = message_id
     validated_data = comment_schema.load(data)
-    data["user_id"] = 1  # usuário fixo
+    user_id = get_jwt_identity()
+    validated_data['user_id'] = user_id
+    print(data) 
     comment = comment_controller.criar_comentario(validated_data)
     return comment_schema.jsonify(comment), 201
 
 @comments_bp.route('/messages/<int:message_id>/comments/<int:comment_id>', methods=['PUT'])
 @mensagem_existe
 @comentario_existe
+@jwt_required()
 def update_comment(message_id, comment_id):
     data = request.get_json()
     data['message_id'] = message_id
@@ -44,6 +51,7 @@ def update_comment(message_id, comment_id):
 @comments_bp.route('/messages/<int:message_id>/comments/<int:comment_id>', methods=['PATCH'])
 @mensagem_existe
 @comentario_existe
+@jwt_required()
 def partial_update_comment(message_id, comment_id):
     data = request.get_json()
     validated_data = comment_schema.load(data, partial=True)
@@ -53,6 +61,7 @@ def partial_update_comment(message_id, comment_id):
 @comments_bp.route('/messages/<int:message_id>/comments/<int:comment_id>', methods=['DELETE'])
 @mensagem_existe
 @comentario_existe
+@jwt_required()
 def delete_comment(message_id, comment_id):
     comment_controller.deletar_comentario(request.comentario)
     return '', 204

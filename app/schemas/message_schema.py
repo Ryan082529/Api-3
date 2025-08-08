@@ -3,14 +3,16 @@ from marshmallow import fields, validate
 from ..models.message import Message
 from .comment_schema import CommentSchema
 from .user_schema import UserSchema
+fields.Field.default_error_messages['required'] = {"errors": "Campo obrigatório."}
 
 class MessageSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Message
-        fields = ("id", "content", "created_at", "comments", "autor")
+        fields = ("id", "content", "created_at", "comments", "autor", "titulo")
 
     id = fields.Int(dump_only=True)
     content = fields.Str(required=True, validate=validate.Length(min=1, max=140))
+    titulo = fields.Str(required=True, validate=validate.Length(min=1, max=140))
     created_at = fields.DateTime(dump_only=True)
 
     # Campo aninhado de comentários

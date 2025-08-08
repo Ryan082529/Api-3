@@ -9,6 +9,7 @@ def obter_comentario(comment_id):
 
 def criar_comentario(dados):
     novo = Comment(**dados)
+    print(dados)
     db.session.add(novo)
     db.session.commit()
     return novo

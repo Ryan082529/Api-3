@@ -30,6 +30,7 @@ def create_message():
 
 @messages_bp.route('/<int:message_id>', methods=['PUT'])
 @mensagem_existe
+@jwt_required()
 def update_message(message_id):
     data = message_schema.load(request.get_json())  # Atualização completa
     updated = message_controller.atualizar_mensagem(request.mensagem, data)
@@ -37,6 +38,7 @@ def update_message(message_id):
 
 @messages_bp.route('/<int:message_id>', methods=['PATCH'])
 @mensagem_existe
+@jwt_required()
 def partial_update_message(message_id):
     data = message_schema.load(request.get_json(), partial=True)  # Atualização parcial
     updated = message_controller.atualizar_mensagem(request.mensagem, data)
@@ -46,10 +48,17 @@ def partial_update_message(message_id):
 @jwt_required()
 @mensagem_existe
 def delete_message(message_id):
-    if request.mensagem.user_id != get_jwt_identity():
-        return jsonify({"error": "Acesso negado."}), 403
-    message_controller.deletar_mensagem(request.mensagem)
-    return '', 204
+    print(request.mensagem.user_id, type(request.mensagem.user_id))
+    print(get_jwt_identity(), type(get_jwt_identity()))
+
+    if str(request.mensagem.user_id) == str(get_jwt_identity()):
+        print('deu ok')
+        message_controller.deletar_mensagem(request.mensagem)
+        return '', 204
+    
+    print('deu ruim')
+    return jsonify({"error": "Acesso negado."}), 403
+    
 
 
 

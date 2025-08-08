@@ -23,6 +23,7 @@ def get_user(user_id):
 def create_user():
     data = request.get_json()
     validated = user_schema.load(data)
+    print(validated)
     validated["senha"] = generate_password_hash(validated["senha"])
     novo = user_controller.criar_usuario(validated)
     return user_schema.jsonify(novo), 201

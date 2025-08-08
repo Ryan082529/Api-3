@@ -47,10 +47,22 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
+    @jwt.unauthorized_loader
+    def unauthorized_response(callback):
+        return jsonify({ "error": "Token JWT ausente ou inválido" }), 401
 
+    @jwt.invalid_token_loader
+    def unauthorized_response(callback):
+        return jsonify({"error": "Você não tem permissão para isso"}), 403
 
     from .routes.messages import messages_bp
     app.register_blueprint(messages_bp, url_prefix="/messages")
+
+    with app.app_context():
+        from .models.user import User
+        from .models.message import Message
+        from .models.comment import Comment
+        db.create_all()
 
 
     from app.routes.comments import comments_bp

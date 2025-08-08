@@ -56,7 +56,7 @@ def create_app():
         return jsonify({"error": "Você não tem permissão para isso"}), 403
 
     from .routes.messages import messages_bp
-    app.register_blueprint(messages_bp, url_prefix="/messages")
+    app.register_blueprint(messages_bp, url_prefix="/mensagens")
 
     with app.app_context():
         from .models.user import User

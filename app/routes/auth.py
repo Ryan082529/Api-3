@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash
 from ..models.user import User
 from .. import db
 
-auth_bp = Blueprint("auth", __name__)
+auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 @auth_bp.route("/login", methods=["POST"])
 def login():

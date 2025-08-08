@@ -3,7 +3,7 @@ from app import db
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(255), nullable=False)
+    conteudo = db.Column(db.String(255), nullable=False)
     titulo = db.Column(db.String(45), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)

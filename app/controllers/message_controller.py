@@ -4,8 +4,8 @@ from .. import db
 def listar_mensagens():
     return Message.query.all()
 
-def obter_mensagem(message_id):
-    return Message.query.get(message_id)  # Retorna None se não encontrar
+def obter_mensagem(mensagens_id):
+    return Message.query.get(mensagens_id)  # Retorna None se não encontrar
 
 def criar_mensagem(dados):
     nova = Message(**dados)

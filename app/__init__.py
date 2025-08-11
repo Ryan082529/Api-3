@@ -51,7 +51,7 @@ def create_app():
     @jwt.unauthorized_loader
     def custom_unauthorized_response(err_str):
     # Verifica a rota acessada
-        if request.path == '/mensagens/<message_id>':
+        if request.path == '/mensagens/<mensagens_id>':
             return jsonify({"erro": "Token não fornecido na rota específica"}), 401
         else:
             return jsonify({"erro": "Token não fornecido"}), 401

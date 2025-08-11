@@ -7,10 +7,10 @@ fields.Field.default_error_messages['required'] = {"errors": "Campo obrigatório
 class CommentSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Comment
-        fields = ("id", "content", "created_at", "message_id", "autor")
+        fields = ("id", "conteudo", "data_criacao", "mensagens_id", "autor")
 
     id = fields.Int(dump_only=True)
-    content = fields.Str(required=True, validate=validate.Length(min=1, max=255))
-    created_at = fields.DateTime(dump_only=True)
-    message_id = fields.Int(required=True, load_only=True)
+    conteudo = fields.Str(required=True, validate=validate.Length(min=1, max=255))
+    data_criacao = fields.DateTime(dump_only=True)
+    mensagens_id = fields.Int(required=True, load_only=True)
     autor = fields.Nested(UserSchema, dump_only=True)

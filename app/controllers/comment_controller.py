@@ -1,8 +1,8 @@
 from ..models.comment import Comment
 from .. import db
 
-def listar_comentarios(message_id):
-    return Comment.query.filter_by(message_id=message_id).all()
+def listar_comentarios(mensagens_id):
+    return Comment.query.filter_by(mensagens_id=mensagens_id).all()
 
 def obter_comentario(comment_id):
     return Comment.query.get(comment_id)
